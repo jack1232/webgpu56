@@ -4,7 +4,7 @@ struct Uniforms {
     modelMatrix : mat4x4<f32>,
 };
 @binding(0) @group(0) var<uniform> uniforms : Uniforms;
-@stage(vertex)
+@vertex
 fn vs_main(@location(0) position : vec4<f32>) ->  @builtin(position) vec4<f32> {
     return uniforms.viewProjectionMatrix*uniforms.modelMatrix * position;                
 }
@@ -15,7 +15,7 @@ struct FragUniforms {
 };
 @binding(0) @group(1) var<uniform> fragUniforms : FragUniforms;
 
-@stage(fragment)
+@fragment
 fn fs_main() -> @location(0) vec4<f32> {
     return vec4<f32>(fragUniforms.color, 1.0);
 }

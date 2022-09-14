@@ -97,22 +97,39 @@ export const InitGPU = async () => {
     const adapter = await navigator.gpu?.requestAdapter();
     const device = await adapter?.requestDevice() as GPUDevice;
     const context = canvas.getContext('webgpu') as GPUCanvasContext;
-
     const devicePixelRatio = window.devicePixelRatio || 1;
     const size = [
         canvas.clientWidth * devicePixelRatio,
         canvas.clientHeight * devicePixelRatio,
     ];
-    const format = context.getPreferredFormat(adapter!);
-
+    //const format = context.getPreferredFormat(adapter!);
+    const format = navigator.gpu.getPreferredCanvasFormat();
     context.configure({
         device: device,
         format: format,
-        size: size,
-        compositingAlphaMode: 'premultiplied'
+        //size: size
+        alphaMode:'opaque'
     });
     return{ device, canvas, format, context, size };
 };
+
+/*export const InitGPU = async () => {
+    const checkgpu = CheckWebGPU();
+    if(checkgpu.includes('Your current browser does not support WebGPU!')){
+        console.log(checkgpu);
+        throw('Your current browser does not support WebGPU!');
+    }
+    const canvas = document.getElementById('canvas-webgpu') as HTMLCanvasElement;
+    const adapter = await navigator.gpu?.requestAdapter();
+    const device = await adapter?.requestDevice() as GPUDevice;
+    const context = canvas.getContext('gpupresent') as GPUPresentationContext;
+    const format = 'bgra8unorm';
+    context.configure({
+        device: device,
+        format: format
+    });
+    return{ device, canvas, format, context };
+};*/
 
 export const CheckWebGPU = () => {
     let result = 'Great, your current browser supports WebGPU!';
